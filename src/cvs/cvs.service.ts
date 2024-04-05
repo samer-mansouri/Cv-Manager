@@ -55,10 +55,34 @@ export class CvsService {
     return cv;
   }
 
+  findOneByIdAndUserId(id: number, userId: number): Promise<Cv> {
+    return this.cvRepository.findOneOrFail({
+      where: { id, user: { id: userId } },
+    });
+  }
+
   update(id: number, updateCvDto: UpdateCvDto): Promise<Cv> {
     const cv = this.cvRepository.preload({
       id: id,
       ...updateCvDto,
+    });
+
+    if (!cv) {
+      throw new Error(`Cv with id ${id} not found`);
+    }
+
+    return cv;
+  }
+
+  updateByIdAndUserId(
+    id: number,
+    userId: number,
+    updateCvDto: UpdateCvDto,
+  ): Promise<Cv> {
+    const cv = this.cvRepository.preload({
+      id: id,
+      ...updateCvDto,
+      user: { id: userId } as any,
     });
 
     if (!cv) {

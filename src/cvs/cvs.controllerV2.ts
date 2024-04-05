@@ -39,30 +39,31 @@ export class CvsControllerV2 {
     @Body() updateCvDto: UpdateCvDto,
     @Request() req,
   ) {
-    console.log('USER ID', req.user.userId);
-    const cv = await this.cvsService.findOne(+id);
-    if (!cv) {
-      throw new NotFoundException(`Le CV #${id} n'a pas été trouvé.`);
-    }
-    if (cv.user !== req.user.userId) {
+    try {
+      const cv = await this.cvsService.findOneByIdAndUserId(
+        +id,
+        req?.user?.userId,
+      );
+      return this.cvsService.update(cv.id, updateCvDto);
+    } catch (error) {
       throw new ForbiddenException(
-        "Vous n'avez pas le droit de modifier ce CV.",
+        `Le CV #${id} n'a pas été trouvé ou vous n'avez pas le droit de le modifier`,
       );
     }
-    return this.cvsService.update(+id, updateCvDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Request() req) {
-    const cv = await this.cvsService.findOne(+id);
-    if (!cv) {
-      throw new NotFoundException(`Le CV #${id} n'a pas été trouvé.`);
-    }
-    if (cv.user !== req.user.userId) {
+    try {
+      const cv = await this.cvsService.findOneByIdAndUserId(
+        +id,
+        req?.user?.userId,
+      );
+      return this.cvsService.remove(cv.id);
+    } catch (error) {
       throw new ForbiddenException(
-        "Vous n'avez pas le droit de supprimer ce CV.",
+        `Le CV #${id} n'a pas été trouvé ou vous n'avez pas le droit de le supprimer`,
       );
     }
-    return this.cvsService.remove(+id);
   }
 }

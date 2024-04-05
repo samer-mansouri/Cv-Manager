@@ -21,6 +21,6 @@ export class CvsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: 'v2/cvs', method: RequestMethod.ALL });
+      .forRoutes({ path: 'v2/*', method: RequestMethod.ALL });
   }
 }
