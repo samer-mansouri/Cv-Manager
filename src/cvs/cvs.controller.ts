@@ -12,6 +12,7 @@ import { CvsService } from './cvs.service';
 import { CreateCvDto } from './dto/create-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
 import { FindCvsDto } from './dto/find-cvs.dto';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
 
 @Controller('cvs')
 export class CvsController {
@@ -30,6 +31,11 @@ export class CvsController {
   @Get()
   findAll(@Query() findCvsDto: FindCvsDto) {
     return this.cvsService.findAllWithParams(findCvsDto);
+  }
+
+  @Get('/pagination')
+  findAllPaginated(@Query() paginationQuery: PaginationQueryDto) {
+    return this.cvsService.findAllPaginated(paginationQuery);
   }
 
   @Get(':id')

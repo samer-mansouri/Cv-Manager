@@ -5,6 +5,7 @@ import { Cv } from './entities/cv.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindCvsDto } from './dto/find-cvs.dto';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
 
 @Injectable()
 export class CvsService {
@@ -97,5 +98,20 @@ export class CvsService {
     if (result.affected === 0) {
       throw new Error(`Cv with id ${id} not found`);
     }
+  }
+
+  async findAllPaginated(paginationQuery: PaginationQueryDto): Promise<any> {
+    const { page = 1, limit = 10 } = paginationQuery;
+    const [results, total] = await this.cvRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return {
+      data: results,
+      total,
+      page,
+      limit,
+    };
   }
 }
