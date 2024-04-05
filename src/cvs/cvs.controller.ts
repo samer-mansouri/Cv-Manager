@@ -60,7 +60,7 @@ export class CvsController {
   }
 
   @Post('upload/:id')
-  @UseInterceptors(FileInterceptor('image', multerConfig)) // Here's where you use multerConfig
+  @UseInterceptors(FileInterceptor('image', multerConfig))
   async uploadFile(@Param('id') id: number, @UploadedFile() file) {
     if (!file) {
       throw new HttpException('File upload failed', HttpStatus.BAD_REQUEST);
