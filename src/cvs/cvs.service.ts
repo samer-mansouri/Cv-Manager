@@ -25,19 +25,35 @@ export class CvsService {
     return this.cvRepository.save(cv);
   }
 
-  findAll() {
-    return `This action returns all cvs`;
+  findAll(): Promise<Cv[]> {
+    return this.cvRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cv`;
+  findOne(id: number): Promise<Cv> {
+    const cv = this.cvRepository.findOneBy({ id });
+    if (!cv) {
+      throw new Error(`Cv with id ${id} not found`);
+    }
+    return cv;
   }
 
-  update(id: number, updateCvDto: UpdateCvDto) {
-    return `This action updates a #${id} cv`;
+  update(id: number, updateCvDto: UpdateCvDto): Promise<Cv> {
+    const cv = this.cvRepository.preload({
+      id: id,
+      ...updateCvDto,
+    });
+
+    if (!cv) {
+      throw new Error(`Cv with id ${id} not found`);
+    }
+
+    return cv;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cv`;
+  async remove(id: number): Promise<void> {
+    const result = await this.cvRepository.delete(id);
+    if (result.affected === 0) {
+      throw new Error(`Cv with id ${id} not found`);
+    }
   }
 }

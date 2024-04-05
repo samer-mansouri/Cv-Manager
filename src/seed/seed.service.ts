@@ -42,8 +42,8 @@ export class SeedService {
   }
 
   async seedCvs(count: number = 10) {
-    const userIds = [1, 2, 3];
-    const skillIds = [1, 2, 3, 4, 5];
+    const userIds = await this.generateUserIds(count);
+    const skillIds = await this.generateSkillIds(count);
 
     for (let i = 0; i < count; i++) {
       const cvDto: CreateCvDto = {
@@ -52,11 +52,19 @@ export class SeedService {
         age: randNumber({ min: 20, max: 50 }),
         cin: `A${randNumber({ min: 100000, max: 999999 })}`,
         job: randJobTitle(),
-        path: `cv-${i}.pdf`, // Assuming you have a logic to create or store CV files
+        path: `cv-${i}.pdf`,
         userId: userIds[randNumber({ min: 0, max: userIds.length - 1 })],
-        skillsIds: skillIds.slice(0, randNumber({ min: 1, max: 3 })),
+        skillsIds: skillIds,
       };
       await this.cvService.create(cvDto);
     }
+  }
+
+  async generateUserIds(count: number): Promise<number[]> {
+    return Array.from({ length: count }, (_, i) => i + 1);
+  }
+
+  async generateSkillIds(count: number): Promise<number[]> {
+    return Array.from({ length: count }, (_, i) => i + 1);
   }
 }
