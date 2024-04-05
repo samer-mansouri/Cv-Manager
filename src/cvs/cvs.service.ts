@@ -4,6 +4,7 @@ import { UpdateCvDto } from './dto/update-cv.dto';
 import { Cv } from './entities/cv.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FindCvsDto } from './dto/find-cvs.dto';
 
 @Injectable()
 export class CvsService {
@@ -26,6 +27,23 @@ export class CvsService {
   }
 
   findAll(): Promise<Cv[]> {
+    return this.cvRepository.find();
+  }
+
+  async findAllWithParams(findCvsDto: FindCvsDto): Promise<Cv[]> {
+    const { search, age } = findCvsDto;
+    if (search || age) {
+      return this.cvRepository
+        .createQueryBuilder('cv')
+        .where(
+          search
+            ? 'LOWER(cv.name) LIKE LOWER(:search) OR LOWER(cv.firstname) LIKE LOWER(:search) OR LOWER(cv.job) LIKE LOWER(:search)'
+            : 'TRUE',
+          { search: `%${search}%` },
+        )
+        .andWhere(age ? 'cv.age = :age' : 'TRUE', { age })
+        .getMany();
+    }
     return this.cvRepository.find();
   }
 

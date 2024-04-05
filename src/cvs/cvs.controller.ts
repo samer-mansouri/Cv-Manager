@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { CvsService } from './cvs.service';
 import { CreateCvDto } from './dto/create-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
+import { FindCvsDto } from './dto/find-cvs.dto';
 
 @Controller('cvs')
 export class CvsController {
@@ -12,9 +22,14 @@ export class CvsController {
     return this.cvsService.create(createCvDto);
   }
 
+  // @Get()
+  // findAll() {
+  //   return this.cvsService.findAll();
+  // }
+
   @Get()
-  findAll() {
-    return this.cvsService.findAll();
+  findAll(@Query() findCvsDto: FindCvsDto) {
+    return this.cvsService.findAllWithParams(findCvsDto);
   }
 
   @Get(':id')
