@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { CvsModule } from './cvs/cvs.module';
 import { SkillsModule } from './skills/skills.module';
 import { SeedModule } from './seed/seed.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SeedModule } from './seed/seed.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
