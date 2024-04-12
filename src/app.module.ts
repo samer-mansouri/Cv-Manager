@@ -14,6 +14,7 @@ import { AuthModule } from './auth/auth.module';
     CvsModule,
     SkillsModule,
     SeedModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -25,7 +26,6 @@ import { AuthModule } from './auth/auth.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
